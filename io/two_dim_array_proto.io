@@ -22,9 +22,41 @@ Array2d get := method(col_no, row_no,
   row at(col_no)
 )
 
-array2d := Array2d dim(2,3)
-array2d getSlot("data") println
+Array2d transpose := method(
+  Array2d old_get := self getSlot("get")
 
+  Array2d get := method(col_no, row_no,
+    self old_get(row_no, col_no)
+  )
+
+  old_set := self getSlot("set")
+  
+  Array2d set := method(col_no, row_no, value,
+    self old_set(row_no, col_no, value)
+  )
+
+  self
+)
+
+array2d := Array2d dim(2,3)
+
+"allocated Array2d:-----------------------------------" println
+array2d data println
+
+"array2d set(1,0,5):-----------------------------------" println
 array2d set(1,0,5)
 array2d getSlot("data") println
+"array2d get(1,0):-----------------------------------" println
 array2d get(1,0) println
+
+"transposed-----------------------------------" println
+transposed := array2d transpose
+transposed data println
+"transposed get(0,1):-----------------------------------" println
+transposed get(0,1) println
+"transposed get(1,0):-----------------------------------" println
+transposed get(1,0) println
+"transposed set(1,0,7):-----------------------------------" println
+transposed data println
+"transposed get(1,0):-----------------------------------" println
+transposed get(1,0) println
