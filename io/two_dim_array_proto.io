@@ -24,13 +24,11 @@ Array2d get := method(col_no, row_no,
 
 Array2d transpose := method(
   Array2d old_get := self getSlot("get")
-
   Array2d get := method(col_no, row_no,
     self old_get(row_no, col_no)
   )
 
-  old_set := self getSlot("set")
-  
+  Array2d old_set := self getSlot("set")
   Array2d set := method(col_no, row_no, value,
     self old_set(row_no, col_no, value)
   )
@@ -57,6 +55,7 @@ transposed get(0,1) println
 "transposed get(1,0):-----------------------------------" println
 transposed get(1,0) println
 "transposed set(1,0,7):-----------------------------------" println
+transposed set(1,0,7)
 transposed data println
 "transposed get(1,0):-----------------------------------" println
 transposed get(1,0) println
