@@ -1,6 +1,5 @@
-result := 0
-
 sum_2d := method(
+  result := 0
   self foreach(row, row foreach(elememt,
       result = result + elememt
     )
