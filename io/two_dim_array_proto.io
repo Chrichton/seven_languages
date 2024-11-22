@@ -1,10 +1,10 @@
 Array2d := Object clone
 
-Array2d dim := method(cols, rows,
+Array2d dim := method(col_count, row_count,
   data := List clone
-  for(i, 1, rows, data append(
+  for(i, 1, row_count, data append(
       row := List clone
-      for(j, 1, cols, row append(nil))
+      for(j, 1, col_count, row append(nil))
     )
   )
 
@@ -41,10 +41,14 @@ Array2d save := method(filename,
   f remove
   f openForUpdating
 
-  row_count := self data size
   col_count := self data at(0) size
-  for(i, 0, row_count - 1,
-    for(j, 0, col_count - 1,
+  f write(col_count asString ..",")
+
+  row_count := self data size
+  f write(row_count asString ..",")
+
+  for(i, 0, col_count - 1,
+    for(j, 0, row_count - 1,
       element := self get(i,j)
       if(element == nil, f write("nil" ..","), 
         element_str := element asString ..","
@@ -53,6 +57,33 @@ Array2d save := method(filename,
     )
   )
   f close
+)
+
+Array2d read := method(filename,
+  f := File with(filename)
+  f openForReading
+
+  line := f readLine
+  numbers := line split(",")
+  col_count := numbers at(0) asNumber
+  row_count := numbers at(1) asNumber
+
+  array2d := Array2d dim(col_count, row_count)
+
+  "read--------" println
+
+  for(row_no, 0, row_count - 1,
+    for(col_no, 0, col_count - 1,
+      numbers_index := 2 + row_no * col_count + col_no
+      element := nil
+      element_str := numbers at(numbers_index)
+      if(element_str != "nil", element = element_str asNumber)
+
+      array2d set(row_no, col_no, element)
+    )
+  )
+
+  array2d
 )
 
 array2d := Array2d dim(2,3)
@@ -81,3 +112,5 @@ transposed get(1,0) println
 
 "save/read-----------------------------------" println
 transposed save("transposed.data")
+read_array2d := Array2d read("transposed.data")
+read_array2d data println
