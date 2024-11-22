@@ -36,6 +36,25 @@ Array2d transpose := method(
   self
 )
 
+Array2d save := method(filename,
+  f := File with(filename)
+  f remove
+  f openForUpdating
+
+  row_count := self data size
+  col_count := self data at(0) size
+  for(i, 0, row_count - 1,
+    for(j, 0, col_count - 1,
+      element := self get(i,j)
+      if(element == nil, f write("nil" ..","), 
+        element_str := element asString ..","
+        f write(element_str)
+      )
+    )
+  )
+  f close
+)
+
 array2d := Array2d dim(2,3)
 
 "allocated Array2d:-----------------------------------" println
@@ -59,3 +78,6 @@ transposed set(1,0,7)
 transposed data println
 "transposed get(1,0):-----------------------------------" println
 transposed get(1,0) println
+
+"save/read-----------------------------------" println
+transposed save("transposed.data")
