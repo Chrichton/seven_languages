@@ -47,9 +47,9 @@ Array2d save := method(filename,
   row_count := self data size
   f write(row_count asString ..",")
 
-  for(i, 0, col_count - 1,
-    for(j, 0, row_count - 1,
-      element := self get(i,j)
+  for(col_no, 0, col_count - 1,
+    for(row_no, 0, row_count - 1,
+      element := self get(col_no,row_no)
       if(element == nil, f write("nil" ..","), 
         element_str := element asString ..","
         f write(element_str)
@@ -64,22 +64,19 @@ Array2d read := method(filename,
   f openForReading
 
   line := f readLine
-  numbers := line split(",")
-  col_count := numbers at(0) asNumber
-  row_count := numbers at(1) asNumber
-
+  values := line split(",")
+  col_count := values at(0) asNumber
+  row_count := values at(1) asNumber
   array2d := Array2d dim(col_count, row_count)
 
-  "read--------" println
-
-  for(row_no, 0, row_count - 1,
-    for(col_no, 0, col_count - 1,
-      numbers_index := 2 + row_no * col_count + col_no
+  for(col_no, 0, col_count - 1,
+    for(row_no, 0, row_count - 1,
+      values_index := 2 + row_no + col_no * row_count
       element := nil
-      element_str := numbers at(numbers_index)
+      element_str := values at(values_index)
       if(element_str != "nil", element = element_str asNumber)
 
-      array2d set(row_no, col_no, element)
+      array2d set(col_no, row_no, element)
     )
   )
 
@@ -97,6 +94,20 @@ array2d getSlot("data") println
 "array2d get(1,0):-----------------------------------" println
 array2d get(1,0) println
 
+"save/read-----------------------------------" println
+array2d set(0,0,1)
+array2d set(0,1,2) 
+array2d set(0,2,3) 
+array2d set(1,0,4)
+array2d set(1,1,5)
+array2d set(1,2,6)
+
+array2d data println
+
+array2d save("array2d.data")
+read_array2d := Array2d read("array2d.data")
+read_array2d data println
+
 "transposed-----------------------------------" println
 transposed := array2d transpose
 transposed data println
@@ -109,8 +120,3 @@ transposed set(1,0,7)
 transposed data println
 "transposed get(1,0):-----------------------------------" println
 transposed get(1,0) println
-
-"save/read-----------------------------------" println
-transposed save("transposed.data")
-read_array2d := Array2d read("transposed.data")
-read_array2d data println
